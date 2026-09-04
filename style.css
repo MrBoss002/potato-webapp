@@ -52,21 +52,10 @@ body {
   font-weight: 900;
 }
 
-.user-avatar {
-  font-size: 16px;
-}
-
-.resource-badge {
-  background: #fef08a;
-}
-
-.energy-badge {
-  background: #bae6fd;
-}
-
-.res-icon {
-  font-size: 16px;
-}
+.user-avatar { font-size: 16px; }
+.resource-badge { background: #fef08a; }
+.energy-badge { background: #bae6fd; }
+.res-icon { font-size: 16px; }
 
 /* --- TAB CONTENT CONTROLLER --- */
 .tab-content {
@@ -77,9 +66,7 @@ body {
   flex: 1;
 }
 
-.tab-content.active {
-  display: flex;
-}
+.tab-content.active { display: flex; }
 
 /* --- TAB 1: TAP GAME STAGE --- */
 #tab-tap {
@@ -96,9 +83,19 @@ body {
   margin: 20px 0;
 }
 
+/* Container holding the potato and surrounding badges */
+.potato-container {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .tap-area {
-  width: 220px;
-  height: 220px;
+  width: 200px;
+  height: 200px;
   background: #fbbf24;
   border: 5px solid #0f172a;
   border-radius: 50%;
@@ -109,6 +106,7 @@ body {
   box-shadow: 0px 10px 0px #0f172a, inset 0px 8px 0px #fef08a;
   touch-action: manipulation;
   transition: transform 0.05s ease;
+  z-index: 2;
 }
 
 .tap-area:active {
@@ -117,10 +115,46 @@ body {
 }
 
 .potato-hero {
-  font-size: 110px;
+  font-size: 100px;
   filter: drop-shadow(0px 8px 0px rgba(0,0,0,0.3));
 }
 
+/* Badge slots floating around the potato */
+.badge-slot {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 3px solid #0f172a;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  box-shadow: 0px 4px 0px #0f172a;
+  z-index: 3;
+  opacity: 0.3;
+  filter: grayscale(100%);
+  transition: all 0.3s ease;
+}
+
+.badge-slot.unlocked {
+  opacity: 1;
+  filter: grayscale(0%);
+  animation: badgePop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.badge-top-left     { top: 5px; left: 5px; }
+.badge-top-right    { top: 5px; right: 5px; }
+.badge-bottom-left  { bottom: 5px; left: 5px; }
+.badge-bottom-right { bottom: 5px; right: 5px; }
+
+@keyframes badgePop {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+
+/* Energy Bar Styling */
 .energy-bar-wrapper {
   width: 100%;
   padding: 10px 0;
@@ -141,7 +175,7 @@ body {
   width: 100%;
   height: 100%;
   background: #38bdf8;
-  transition: width 0.2s ease;
+  transition: width 0.15s ease-out;
 }
 
 /* --- BANNERS & HEADINGS --- */
@@ -151,7 +185,7 @@ body {
 }
 
 .section-banner h2 {
-  font-size: 26px;
+  font-size: 24px;
   color: #ffffff;
   text-shadow: 3px 3px 0px #0f172a;
   letter-spacing: 1px;
@@ -163,7 +197,60 @@ body {
   font-weight: bold;
 }
 
-/* --- TAB 2: TASKS SECTION --- */
+/* --- TAB 2: UPGRADES SECTION --- */
+.upgrades-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.upgrade-card {
+  background: #fef08a;
+  border: 3px solid #0f172a;
+  border-radius: 16px;
+  padding: 12px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+  box-shadow: 0px 5px 0px #0f172a;
+}
+
+.upgrade-icon { font-size: 32px; }
+
+.upgrade-title {
+  font-size: 11px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.upgrade-benefit {
+  font-size: 10px;
+  font-weight: 900;
+  color: #16a34a;
+}
+
+.upgrade-btn {
+  width: 100%;
+  background: #2dd4bf;
+  border: 2px solid #0f172a;
+  border-radius: 8px;
+  padding: 6px 0;
+  font-size: 11px;
+  font-weight: 900;
+  box-shadow: 0px 3px 0px #0f172a;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.upgrade-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0px 1px 0px #0f172a;
+}
+
+/* --- TAB 3: TASKS SECTION --- */
 .tasks-container {
   width: 100%;
   display: flex;
@@ -183,9 +270,7 @@ body {
   box-shadow: 0px 5px 0px #0f172a;
 }
 
-.task-icon {
-  font-size: 28px;
-}
+.task-icon { font-size: 28px; }
 
 .task-info {
   display: flex;
@@ -194,23 +279,9 @@ body {
   flex: 1;
 }
 
-.task-title {
-  font-size: 14px;
-  font-weight: 900;
-  color: #0f172a;
-}
-
-.task-desc {
-  font-size: 11px;
-  color: #64748b;
-  font-weight: bold;
-}
-
-.task-reward {
-  font-size: 12px;
-  color: #d97706;
-  font-weight: 900;
-}
+.task-title { font-size: 14px; font-weight: 900; color: #0f172a; }
+.task-desc { font-size: 11px; color: #64748b; font-weight: bold; }
+.task-reward { font-size: 12px; color: #d97706; font-weight: 900; }
 
 .task-btn {
   background: #2dd4bf;
@@ -223,12 +294,6 @@ body {
   cursor: pointer;
   box-shadow: 0px 4px 0px #0f172a;
   white-space: nowrap;
-  transition: transform 0.05s ease, background 0.2s ease;
-}
-
-.task-btn:active {
-  transform: translateY(3px);
-  box-shadow: 0px 1px 0px #0f172a;
 }
 
 .task-btn.completed {
@@ -236,49 +301,6 @@ body {
   color: #64748b;
   box-shadow: none;
   cursor: not-allowed;
-}
-
-/* --- TAB 3: UPGRADES SECTION --- */
-.upgrades-grid {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-.upgrade-card {
-  background: #fef08a;
-  border: 3px solid #0f172a;
-  border-radius: 16px;
-  padding: 12px 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 6px;
-  box-shadow: 0px 5px 0px #0f172a;
-}
-
-.upgrade-icon {
-  font-size: 36px;
-}
-
-.upgrade-title {
-  font-size: 11px;
-  font-weight: 900;
-  color: #0f172a;
-}
-
-.upgrade-btn {
-  width: 100%;
-  background: #fbbf24;
-  border: 2px solid #0f172a;
-  border-radius: 8px;
-  padding: 6px 0;
-  font-size: 12px;
-  font-weight: 900;
-  box-shadow: 0px 3px 0px #0f172a;
-  cursor: pointer;
 }
 
 /* --- CARTOON CARDS & BUTTONS --- */
@@ -292,10 +314,7 @@ body {
   text-align: center;
 }
 
-.invite-icon {
-  font-size: 50px;
-  margin-bottom: 12px;
-}
+.invite-icon { font-size: 50px; margin-bottom: 12px; }
 
 .cartoon-btn {
   width: 100%;
@@ -308,10 +327,7 @@ body {
   box-shadow: 0px 5px 0px #0f172a;
 }
 
-.btn-green {
-  background: #2dd4bf;
-  color: #0f172a;
-}
+.btn-green { background: #2dd4bf; color: #0f172a; }
 
 /* --- BOTTOM CARTOON NAVIGATION BAR --- */
 .bottom-nav {
@@ -340,21 +356,11 @@ body {
   cursor: pointer;
 }
 
-.nav-icon {
-  font-size: 22px;
-}
+.nav-icon { font-size: 22px; }
+.nav-btn label { font-size: 10px; font-weight: 900; cursor: pointer; }
+.nav-btn.active { color: #1d4ed8; }
 
-.nav-btn label {
-  font-size: 10px;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.nav-btn.active {
-  color: #1d4ed8;
-}
-
-/* Floating Tap Number Effect */
+/* Floating Tap Score Effect */
 .click-score {
   position: absolute;
   color: #fef08a;
@@ -363,6 +369,7 @@ body {
   font-size: 28px;
   pointer-events: none;
   animation: floatUp 0.8s ease-out forwards;
+  z-index: 20;
 }
 
 @keyframes floatUp {
