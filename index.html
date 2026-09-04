@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Potato Tap Game</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    
+    <!-- Cartoon Top Header / Stats Bar -->
+    <header class="top-bar">
+      <div class="user-pill">
+        <div class="user-avatar">🥔</div>
+        <span id="username">Player</span>
+      </div>
+      
+      <div class="resource-badge balance-badge">
+        <span class="res-icon">🥔</span>
+        <span id="balance">0</span>
+      </div>
+
+      <div class="resource-badge energy-badge">
+        <span class="res-icon">⚡</span>
+        <span id="energy">1000</span>
+      </div>
+    </header>
+
+    <!-- TAB 1: TAP GAME -->
+    <main id="tab-tap" class="tab-content active">
+      <div class="game-stage">
+        <div class="tap-area" id="tapButton">
+          <div class="potato-hero">🥔</div>
+        </div>
+      </div>
+      
+      <div class="energy-bar-wrapper">
+        <div class="energy-bar">
+          <div id="energyFill" class="energy-fill"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- TAB 2: TASKS (Complete & Earn) -->
+    <section id="tab-tasks" class="tab-content">
+      <div class="section-banner">
+        <h2>COMPLETE & EARN</h2>
+        <p class="subtitle">Finish tasks to claim instant potato bonuses!</p>
+      </div>
+      
+      <div id="tasksList" class="tasks-container">
+        <!-- Tasks render dynamically from tasks.json -->
+        <div class="loading-box">Loading tasks...</div>
+      </div>
+    </section>
+
+    <!-- TAB 3: UPGRADES / CARDS -->
+    <section id="tab-upgrades" class="tab-content">
+      <div class="section-banner">
+        <h2>UPGRADES</h2>
+        <p class="subtitle">Boost your passive income per hour!</p>
+      </div>
+
+      <div class="upgrades-grid">
+        <div class="upgrade-card">
+          <div class="upgrade-icon">🪓</div>
+          <div class="upgrade-title">HEAD GEAR</div>
+          <button class="upgrade-btn">🥔 1M</button>
+        </div>
+        <div class="upgrade-card">
+          <div class="upgrade-icon">🌍</div>
+          <div class="upgrade-title">BODY GEAR</div>
+          <button class="upgrade-btn">🥔 1.2M</button>
+        </div>
+        <div class="upgrade-card">
+          <div class="upgrade-icon">🪠</div>
+          <div class="upgrade-title">MAIN GEAR</div>
+          <button class="upgrade-btn">🥔 1.1M</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: FRIENDS / REFERRAL -->
+    <section id="tab-friends" class="tab-content">
+      <div class="section-banner">
+        <h2>INVITE FRIENDS</h2>
+        <p class="subtitle">Get 5,000 Potatoes for every friend invited!</p>
+      </div>
+      
+      <div class="cartoon-card text-center">
+        <div class="invite-icon">👥</div>
+        <button id="inviteBtn" class="cartoon-btn btn-green">INVITE A FRIEND</button>
+      </div>
+    </section>
+
+    <!-- Bottom Cartoon Navigation Bar -->
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-tab="tab-tap">
+        <span class="nav-icon">🥔</span>
+        <label>TAP</label>
+      </button>
+      <button class="nav-btn" data-tab="tab-upgrades">
+        <span class="nav-icon">⚡</span>
+        <label>UPGRADE</label>
+      </button>
+      <button class="nav-btn" data-tab="tab-tasks">
+        <span class="nav-icon">🎯</span>
+        <label>EARN</label>
+      </button>
+      <button class="nav-btn" data-tab="tab-friends">
+        <span class="nav-icon">👥</span>
+        <label>FRIENDS</label>
+      </button>
+    </nav>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
