@@ -5,107 +5,116 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Potato Tap Game</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="./style.css?v=1.2">
 </head>
 <body>
   <div id="app">
-    
-    <!-- Cartoon Top Header / Stats Bar -->
+    <!-- Top Stats Bar -->
     <header class="top-bar">
       <div class="user-pill">
-        <div class="user-avatar">🥔</div>
+        <span class="user-avatar">🥔</span>
         <span id="username">Player</span>
       </div>
-      
-      <div class="resource-badge balance-badge">
+      <div class="resource-badge">
         <span class="res-icon">🥔</span>
         <span id="balance">0</span>
       </div>
-
       <div class="resource-badge energy-badge">
         <span class="res-icon">⚡</span>
-        <span id="energy">1000</span>
+        <span id="energy">50</span>/<span id="maxEnergy">50</span>
       </div>
     </header>
 
-    <!-- TAB 1: TAP GAME -->
+    <!-- Tab 1: Tap Game Stage -->
     <main id="tab-tap" class="tab-content active">
       <div class="game-stage">
-        <div class="tap-area" id="tapButton">
-          <div class="potato-hero">🥔</div>
+        <!-- Floating Badges Container around Potato -->
+        <div class="potato-container">
+          <div class="badge-slot badge-top-left" id="badge-bronze" title="Bronze Tapper"></div>
+          <div class="badge-slot badge-top-right" id="badge-silver" title="Silver Tapper"></div>
+          <div class="badge-slot badge-bottom-left" id="badge-gold" title="Gold Tapper"></div>
+          <div class="badge-slot badge-bottom-right" id="badge-diamond" title="Diamond Tapper"></div>
+
+          <!-- Central Tap Button -->
+          <div class="tap-area" id="tapButton">
+            <span class="potato-hero">🥔</span>
+          </div>
         </div>
       </div>
-      
+
+      <!-- Visible Energy Recharge Bar -->
       <div class="energy-bar-wrapper">
         <div class="energy-bar">
-          <div id="energyFill" class="energy-fill"></div>
+          <div class="energy-fill" id="energyFill"></div>
         </div>
       </div>
     </main>
 
-    <!-- TAB 2: TASKS (Complete & Earn) -->
-    <section id="tab-tasks" class="tab-content">
+    <!-- Tab 2: Upgrades Section -->
+    <section id="tab-upgrade" class="tab-content">
       <div class="section-banner">
-        <h2>COMPLETE & EARN</h2>
+        <h2>BOOSTERS & GEAR 🚀</h2>
+        <p class="subtitle">Upgrade your tapping power and passive income!</p>
+      </div>
+      <div class="upgrades-grid">
+        <!-- Upgrade 1: Auto Bot -->
+        <div class="upgrade-card">
+          <div class="upgrade-icon">🤖</div>
+          <div class="upgrade-title">AUTO BOT</div>
+          <div class="upgrade-benefit">+100/hr 🥔</div>
+          <button class="upgrade-btn" id="btn-autobot">🥔 1,000</button>
+        </div>
+
+        <!-- Upgrade 2: Multi-Tap -->
+        <div class="upgrade-card">
+          <div class="upgrade-icon">🚀</div>
+          <div class="upgrade-title">MULTI-TAP</div>
+          <div class="upgrade-benefit">+2 per tap</div>
+          <button class="upgrade-btn" id="btn-multitap">🥔 500</button>
+        </div>
+
+        <!-- Upgrade 3: Max Energy -->
+        <div class="upgrade-card">
+          <div class="upgrade-icon">🔋</div>
+          <div class="upgrade-title">MAX ENERGY</div>
+          <div class="upgrade-benefit">+15 Max Taps</div>
+          <button class="upgrade-btn" id="btn-maxenergy">🥔 250</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 3: Tasks Section -->
+    <section id="tab-earn" class="tab-content">
+      <div class="section-banner">
+        <h2>COMPLETE & EARN 🎯</h2>
         <p class="subtitle">Finish tasks to claim instant potato bonuses!</p>
       </div>
-      
-      <div id="tasksList" class="tasks-container">
-        <!-- Tasks render dynamically from tasks.json -->
-        <div class="loading-box">Loading tasks...</div>
-      </div>
+      <div id="tasksList" class="tasks-container"></div>
     </section>
 
-    <!-- TAB 3: UPGRADES / CARDS -->
-    <section id="tab-upgrades" class="tab-content">
-      <div class="section-banner">
-        <h2>UPGRADES</h2>
-        <p class="subtitle">Boost your passive income per hour!</p>
-      </div>
-
-      <div class="upgrades-grid">
-        <div class="upgrade-card">
-          <div class="upgrade-icon">🪓</div>
-          <div class="upgrade-title">HEAD GEAR</div>
-          <button class="upgrade-btn">🥔 1M</button>
-        </div>
-        <div class="upgrade-card">
-          <div class="upgrade-icon">🌍</div>
-          <div class="upgrade-title">BODY GEAR</div>
-          <button class="upgrade-btn">🥔 1.2M</button>
-        </div>
-        <div class="upgrade-card">
-          <div class="upgrade-icon">🪠</div>
-          <div class="upgrade-title">MAIN GEAR</div>
-          <button class="upgrade-btn">🥔 1.1M</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 4: FRIENDS / REFERRAL -->
+    <!-- Tab 4: Friends Section -->
     <section id="tab-friends" class="tab-content">
       <div class="section-banner">
-        <h2>INVITE FRIENDS</h2>
-        <p class="subtitle">Get 5,000 Potatoes for every friend invited!</p>
+        <h2>INVITE FRIENDS 👥</h2>
+        <p class="subtitle">Earn 5,000 Potatoes for every friend invited!</p>
       </div>
-      
-      <div class="cartoon-card text-center">
-        <div class="invite-icon">👥</div>
-        <button id="inviteBtn" class="cartoon-btn btn-green">INVITE A FRIEND</button>
+      <div class="cartoon-card">
+        <div class="invite-icon">🎁</div>
+        <button class="cartoon-btn btn-green" id="inviteBtn">INVITE A FRIEND</button>
       </div>
     </section>
 
-    <!-- Bottom Cartoon Navigation Bar -->
+    <!-- Bottom Navigation Bar -->
     <nav class="bottom-nav">
       <button class="nav-btn active" data-tab="tab-tap">
         <span class="nav-icon">🥔</span>
         <label>TAP</label>
       </button>
-      <button class="nav-btn" data-tab="tab-upgrades">
+      <button class="nav-btn" data-tab="tab-upgrade">
         <span class="nav-icon">⚡</span>
         <label>UPGRADE</label>
       </button>
-      <button class="nav-btn" data-tab="tab-tasks">
+      <button class="nav-btn" data-tab="tab-earn">
         <span class="nav-icon">🎯</span>
         <label>EARN</label>
       </button>
@@ -114,9 +123,8 @@
         <label>FRIENDS</label>
       </button>
     </nav>
-
   </div>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=1.2"></script>
 </body>
 </html>
