@@ -1,0 +1,364 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial Black', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body {
+  background: #1d4ed8;
+  background-image: radial-gradient(#2563eb 2px, transparent 2px);
+  background-size: 20px 20px;
+  color: #0f172a;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-x: hidden;
+}
+
+#app {
+  width: 100%;
+  max-width: 480px;
+  padding: 12px;
+  padding-bottom: 95px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* --- TOP DASHBOARD / HEADER --- */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.user-pill, .resource-badge {
+  background: #ffffff;
+  border: 3px solid #0f172a;
+  border-radius: 20px;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0px 4px 0px #0f172a;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.user-avatar {
+  font-size: 16px;
+}
+
+.resource-badge {
+  background: #fef08a;
+}
+
+.energy-badge {
+  background: #bae6fd;
+}
+
+.res-icon {
+  font-size: 16px;
+}
+
+/* --- TAB CONTENT CONTROLLER --- */
+.tab-content {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.tab-content.active {
+  display: flex;
+}
+
+/* --- TAB 1: TAP GAME STAGE --- */
+.game-stage {
+  margin: 30px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.tap-area {
+  width: 230px;
+  height: 230px;
+  background: #fbbf24;
+  border: 5px solid #0f172a;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0px 10px 0px #0f172a, inset 0px 8px 0px #fef08a;
+  touch-action: manipulation;
+  transition: transform 0.05s ease;
+}
+
+.tap-area:active {
+  transform: scale(0.94) translateY(4px);
+  box-shadow: 0px 6px 0px #0f172a, inset 0px 8px 0px #fef08a;
+}
+
+.potato-hero {
+  font-size: 120px;
+  filter: drop-shadow(0px 8px 0px rgba(0,0,0,0.3));
+}
+
+.energy-bar-wrapper {
+  width: 100%;
+  margin-top: auto;
+  padding: 10px 0;
+}
+
+.energy-bar {
+  width: 100%;
+  height: 20px;
+  background: #ffffff;
+  border: 3px solid #0f172a;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0px 4px 0px #0f172a;
+}
+
+.energy-fill {
+  width: 100%;
+  height: 100%;
+  background: #38bdf8;
+  transition: width 0.2s ease;
+}
+
+/* --- BANNERS & HEADINGS --- */
+.section-banner {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.section-banner h2 {
+  font-size: 26px;
+  color: #ffffff;
+  text-shadow: 3px 3px 0px #0f172a;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: #bfdbfe;
+  font-weight: bold;
+}
+
+/* --- TAB 2: TASKS SECTION (BOINKERS STYLE CARDS) --- */
+.tasks-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task-card {
+  background: #ffffff;
+  border: 3px solid #0f172a;
+  border-radius: 16px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  box-shadow: 0px 5px 0px #0f172a;
+}
+
+.task-icon {
+  font-size: 28px;
+}
+
+.task-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.task-title {
+  font-size: 14px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.task-desc {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: bold;
+}
+
+.task-reward {
+  font-size: 12px;
+  color: #d97706;
+  font-weight: 900;
+}
+
+/* Task "GO" Action Button */
+.task-btn {
+  background: #2dd4bf;
+  color: #0f172a;
+  border: 3px solid #0f172a;
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0px 4px 0px #0f172a;
+  white-space: nowrap;
+  transition: transform 0.05s ease, background 0.2s ease;
+}
+
+.task-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0px 1px 0px #0f172a;
+}
+
+.task-btn.completed {
+  background: #cbd5e1;
+  color: #64748b;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* --- TAB 3: UPGRADES SECTION --- */
+.upgrades-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.upgrade-card {
+  background: #fef08a;
+  border: 3px solid #0f172a;
+  border-radius: 16px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  box-shadow: 0px 5px 0px #0f172a;
+}
+
+.upgrade-icon {
+  font-size: 36px;
+}
+
+.upgrade-title {
+  font-size: 11px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.upgrade-btn {
+  width: 100%;
+  background: #fbbf24;
+  border: 2px solid #0f172a;
+  border-radius: 8px;
+  padding: 6px 0;
+  font-size: 12px;
+  font-weight: 900;
+  box-shadow: 0px 3px 0px #0f172a;
+  cursor: pointer;
+}
+
+/* --- CARTOON CARDS & BUTTONS --- */
+.cartoon-card {
+  width: 100%;
+  background: #ffffff;
+  border: 3px solid #0f172a;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0px 5px 0px #0f172a;
+  text-align: center;
+}
+
+.invite-icon {
+  font-size: 50px;
+  margin-bottom: 12px;
+}
+
+.cartoon-btn {
+  width: 100%;
+  border: 3px solid #0f172a;
+  border-radius: 14px;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0px 5px 0px #0f172a;
+}
+
+.btn-green {
+  background: #2dd4bf;
+  color: #0f172a;
+}
+
+/* --- BOTTOM CARTOON NAVIGATION BAR --- */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  border-top: 4px solid #0f172a;
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0;
+  z-index: 100;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: #64748b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+}
+
+.nav-icon {
+  font-size: 22px;
+}
+
+.nav-btn label {
+  font-size: 10px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.nav-btn.active {
+  color: #1d4ed8;
+}
+
+/* Floating Tap Number Effect */
+.click-score {
+  position: absolute;
+  color: #fef08a;
+  -webkit-text-stroke: 1.5px #0f172a;
+  font-weight: 900;
+  font-size: 28px;
+  pointer-events: none;
+  animation: floatUp 0.8s ease-out forwards;
+}
+
+@keyframes floatUp {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-40px); }
+}
