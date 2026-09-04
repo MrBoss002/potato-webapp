@@ -14,7 +14,7 @@ const state = {
   maxEnergy: 1000,
   pendingTaps: 0,
   completedTasks: [],
-  apiBaseUrl: "https://core-api-server.onrender.com" // Update after Render deployment
+  apiBaseUrl: "https://core-api-server-qkny.onrender.com" // Update after Render deployment
 };
 
 // DOM Elements
