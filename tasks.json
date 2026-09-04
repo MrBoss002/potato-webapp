@@ -1,0 +1,29 @@
+[
+  {
+    "id": "yt_sub",
+    "title": "Subscribe YouTube",
+    "description": "Subscribe developer YouTube channel to claim 5,000 potatoes",
+    "reward": 5000,
+    "btnText": "GO",
+    "link": "https://youtube.com/@MrBoss002",
+    "icon": "📺"
+  },
+  {
+    "id": "tg_join",
+    "title": "Join Telegram Channel",
+    "description": "Join official community channel for daily updates & news",
+    "reward": 2500,
+    "btnText": "GO",
+    "link": "https://t.me/MrBossTG",
+    "icon": "📢"
+  },
+  {
+    "id": "insta_follow",
+    "title": "Follow on Instagram",
+    "description": "Follow our official store page to support the project",
+    "reward": 3000,
+    "btnText": "GO",
+    "link": "https://instagram.com/zerotwo_onlinestore",
+    "icon": "📸"
+  }
+]
