@@ -203,9 +203,12 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
+  padding-top: 10px; /* Gives headroom for star stickers */
 }
 
 .upgrade-card {
+  position: relative;
+  overflow: visible;
   background: #fef08a;
   border: 3px solid #0f172a;
   border-radius: 16px;
@@ -216,6 +219,33 @@ body {
   text-align: center;
   gap: 4px;
   box-shadow: 0px 5px 0px #0f172a;
+}
+
+/* Star Burst Level Badge */
+.lvl-badge {
+  position: absolute;
+  top: -12px;
+  right: -8px;
+  width: 40px;
+  height: 40px;
+  background: #f59e0b;
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-shadow: 1px 1px 0px #0f172a;
+  box-shadow: 0px 3px 0px #0f172a;
+  z-index: 5;
+  clip-path: polygon(
+    50% 0%, 63% 15%, 83% 7%, 81% 28%, 100% 38%, 
+    88% 55%, 96% 75%, 76% 79%, 68% 98%, 50% 86%, 
+    32% 98%, 24% 79%, 4% 75%, 12% 55%, 0% 38%, 
+    19% 28%, 17% 7%, 37% 15%
+  );
+  animation: badgePop 0.3s ease-out;
 }
 
 .upgrade-icon { font-size: 32px; }
