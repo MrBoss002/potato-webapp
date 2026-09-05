@@ -18,7 +18,14 @@ const state = {
   unlockedBadges: [],
   pendingTaps: 0,
   completedTasks: [],
-  apiBaseUrl: "https://core-api-server-qkny.onrender.com"
+  apiBaseUrl: "https://core-api-server-qkny.onrender.com",
+
+  // Level Tracking & Double Cost Scaling
+  upgrades: {
+    autobot: { level: 0, cost: 1000 },
+    multitap: { level: 1, cost: 500 },
+    maxenergy: { level: 0, cost: 250 }
+  }
 };
 
 // DOM Elements
@@ -155,18 +162,32 @@ function updateUI() {
     const percentage = (state.energy / state.maxEnergy) * 100;
     energyFillEl.style.width = `${percentage}%`;
   }
+
+  // Update Star Sticker Badges Text
+  const badgeAutobot = document.getElementById('badge-autobot');
+  const badgeMultitap = document.getElementById('badge-multitap');
+  const badgeMaxenergy = document.getElementById('badge-maxenergy');
+
+  if (badgeAutobot) badgeAutobot.textContent = `Lvl ${state.upgrades.autobot.level}`;
+  if (badgeMultitap) badgeMultitap.textContent = `Lvl ${state.upgrades.multitap.level}`;
+  if (badgeMaxenergy) badgeMaxenergy.textContent = `Lvl ${state.upgrades.maxenergy.level}`;
+
+  // Update Upgrade Buttons Cost Text
+  if (btnAutobot) btnAutobot.textContent = `🥔 ${state.upgrades.autobot.cost.toLocaleString()}`;
+  if (btnMultitap) btnMultitap.textContent = `🥔 ${state.upgrades.multitap.cost.toLocaleString()}`;
+  if (btnMaxenergy) btnMaxenergy.textContent = `🥔 ${state.upgrades.maxenergy.cost.toLocaleString()}`;
 }
 
 // --- UPGRADE SYSTEM LOGIC ---
 function setupUpgrades() {
   if (btnAutobot) {
     btnAutobot.addEventListener('click', () => {
-      if (state.balance >= 1000) {
-        state.balance -= 1000;
+      const up = state.upgrades.autobot;
+      if (state.balance >= up.cost) {
+        state.balance -= up.cost;
+        up.level += 1;
         state.autoBotIncome += 100;
-        btnAutobot.textContent = 'OWNED ✓';
-        btnAutobot.disabled = true;
-        btnAutobot.style.background = '#cbd5e1';
+        up.cost *= 2; // Double cost for next level
         updateUI();
       }
     });
@@ -174,12 +195,12 @@ function setupUpgrades() {
 
   if (btnMultitap) {
     btnMultitap.addEventListener('click', () => {
-      if (state.balance >= 500) {
-        state.balance -= 500;
+      const up = state.upgrades.multitap;
+      if (state.balance >= up.cost) {
+        state.balance -= up.cost;
+        up.level += 1;
         state.tapPower += 2;
-        btnMultitap.textContent = 'LVL 2 ✓';
-        btnMultitap.disabled = true;
-        btnMultitap.style.background = '#cbd5e1';
+        up.cost *= 2; // Double cost for next level
         updateUI();
       }
     });
@@ -187,13 +208,13 @@ function setupUpgrades() {
 
   if (btnMaxenergy) {
     btnMaxenergy.addEventListener('click', () => {
-      if (state.balance >= 250) {
-        state.balance -= 250;
+      const up = state.upgrades.maxenergy;
+      if (state.balance >= up.cost) {
+        state.balance -= up.cost;
+        up.level += 1;
         state.maxEnergy += 15;
         state.energy += 15;
-        btnMaxenergy.textContent = '+15 ADDED ✓';
-        btnMaxenergy.disabled = true;
-        btnMaxenergy.style.background = '#cbd5e1';
+        up.cost *= 2; // Double cost for next level
         updateUI();
       }
     });
