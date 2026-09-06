@@ -10,8 +10,8 @@ const state = {
   user: tg?.initDataUnsafe?.user || { id: 12345678, first_name: "Player", username: "Guest" },
   refBy: tg?.initDataUnsafe?.start_param || null,
   balance: 0,
-  energy: 50,
-  maxEnergy: 50,
+  energy: 1000,
+  maxEnergy: 1000,
   tapPower: 1,
   autoBotIncome: 0,
   totalTapsCount: 0,
@@ -19,15 +19,20 @@ const state = {
   pendingTaps: 0,
   completedTasks: JSON.parse(localStorage.getItem('completedTasks') || '[]'),
   referrals: [],
+  referralCount: 0,
   apiBaseUrl: "https://core-api-server-qkny.onrender.com",
 
-  // Level Tracking & Double Cost Scaling
+  // Upgrades
   upgrades: {
     autobot: { level: 0, cost: 1000 },
     multitap: { level: 1, cost: 500 },
     maxenergy: { level: 0, cost: 250 }
   }
 };
+
+// Anti-Bot Captcha Variables
+let tapSessionCount = 0;
+let isCaptchaActive = false;
 
 // DOM Elements
 const balanceEl = document.getElementById('balance');
@@ -60,15 +65,54 @@ document.addEventListener('DOMContentLoaded', () => {
   initUser();
   loadLeaderboard();
   
-  // Auto-regenerate 1 energy every 1.5 seconds
-  setInterval(regenerateEnergy, 1500);
+  // Regenerate 1 energy every second
+  setInterval(regenerateEnergy, 1000);
 
-  // Passive Auto Bot Income (Every 1 hour, divided into 5-second tick credits)
+  // Passive Auto Bot Income
   setInterval(processAutoBotIncome, 5000);
 
-  // Sync taps to backend every 5 seconds
+  // Sync data to backend every 5 seconds
   setInterval(syncData, 5000);
 });
+
+// --- ANTI-BOT CAPTCHA ---
+function triggerCaptcha(onSuccess) {
+  isCaptchaActive = true;
+  const num1 = Math.floor(Math.random() * 9) + 1;
+  const num2 = Math.floor(Math.random() * 9) + 1;
+  const answer = num1 + num2;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'captcha-overlay';
+  overlay.style.cssText = `
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85); display: flex; align-items: center;
+    justify-content: center; z-index: 10000; color: #fff; text-align: center;
+  `;
+  overlay.innerHTML = `
+    <div style="background: #1e1e2d; padding: 25px; border-radius: 16px; width: 85%; max-width: 300px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+      <h3 style="margin-top:0;">🤖 Verification</h3>
+      <p style="font-size: 14px; color: #aaa;">Solve equation to verify you are human:</p>
+      <h2 style="color: #f39c12; margin: 15px 0;">${num1} + ${num2} = ?</h2>
+      <input type="number" id="captcha-input" style="width: 80%; padding: 10px; font-size: 18px; border-radius: 8px; border: 1px solid #444; background: #2a2a3c; color: white; text-align: center; outline: none;">
+      <br>
+      <button id="captcha-btn" style="margin-top: 15px; width: 85%; padding: 10px; background: #27ae60; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Submit</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  document.getElementById('captcha-btn').onclick = () => {
+    const inputVal = parseInt(document.getElementById('captcha-input').value);
+    if (inputVal === answer) {
+      document.body.removeChild(overlay);
+      isCaptchaActive = false;
+      tapSessionCount = 0;
+      if (onSuccess) onSuccess();
+    } else {
+      alert('Incorrect answer. Try again!');
+    }
+  };
+}
 
 // --- NAVIGATION CONTROLLER ---
 function setupNavigation() {
@@ -86,7 +130,6 @@ function setupNavigation() {
       const activeContent = document.getElementById(targetTab);
       if (activeContent) activeContent.classList.add('active');
 
-      // Fetch fresh leaderboard data when entering Leaderboard tab
       if (targetTab === 'tab-leaderboard') {
         loadLeaderboard();
       }
@@ -94,18 +137,26 @@ function setupNavigation() {
   });
 }
 
-// --- TAP MECHANICS & BADGE UNLOCKS ---
+// --- TAP MECHANICS ---
 function setupTapMechanics() {
   if (!tapButton) return;
 
   tapButton.addEventListener('pointerdown', (e) => {
-    if (state.energy <= 0) return;
+    if (isCaptchaActive) return;
 
-    // Deduct energy & add score using current tap power
-    state.energy -= 1;
+    if (state.energy < state.tapPower) return;
+
+    // Trigger Anti-Bot Captcha every 100 taps
+    tapSessionCount++;
+    if (tapSessionCount >= 100) {
+      triggerCaptcha();
+      return;
+    }
+
+    state.energy -= state.tapPower;
     state.balance += state.tapPower;
     state.totalTapsCount += 1;
-    state.pendingTaps += 1;
+    state.pendingTaps += state.tapPower;
 
     updateUI();
     checkBadgeUnlocks();
@@ -172,7 +223,6 @@ function updateUI() {
     energyFillEl.style.width = `${percentage}%`;
   }
 
-  // Update Star Sticker Badges Text
   const badgeAutobot = document.getElementById('badge-autobot');
   const badgeMultitap = document.getElementById('badge-multitap');
   const badgeMaxenergy = document.getElementById('badge-maxenergy');
@@ -181,7 +231,6 @@ function updateUI() {
   if (badgeMultitap) badgeMultitap.textContent = `Lvl ${state.upgrades.multitap.level}`;
   if (badgeMaxenergy) badgeMaxenergy.textContent = `Lvl ${state.upgrades.maxenergy.level}`;
 
-  // Update Upgrade Buttons Cost Text
   if (btnAutobot) btnAutobot.textContent = `🥔 ${state.upgrades.autobot.cost.toLocaleString()}`;
   if (btnMultitap) btnMultitap.textContent = `🥔 ${state.upgrades.multitap.cost.toLocaleString()}`;
   if (btnMaxenergy) btnMaxenergy.textContent = `🥔 ${state.upgrades.maxenergy.cost.toLocaleString()}`;
@@ -198,6 +247,7 @@ function setupUpgrades() {
         state.autoBotIncome += 100;
         up.cost *= 2;
         updateUI();
+        syncData(true);
       }
     });
   }
@@ -211,6 +261,7 @@ function setupUpgrades() {
         state.tapPower += 2;
         up.cost *= 2;
         updateUI();
+        syncData(true);
       }
     });
   }
@@ -221,16 +272,17 @@ function setupUpgrades() {
       if (state.balance >= up.cost) {
         state.balance -= up.cost;
         up.level += 1;
-        state.maxEnergy += 15;
-        state.energy += 15;
+        state.maxEnergy += 500;
+        state.energy += 500;
         up.cost *= 2;
         updateUI();
+        syncData(true);
       }
     });
   }
 }
 
-// --- TASK SYSTEM WITH 35-SECOND TIMER ---
+// --- TASK SYSTEM WITH CHANNEL FORCE-SUB ---
 async function loadTasks() {
   if (!tasksListEl) return;
 
@@ -269,7 +321,7 @@ async function loadTasks() {
   }
 }
 
-function handleTaskClick(task, btn) {
+async function handleTaskClick(task, btn) {
   if (btn.classList.contains('completed')) return;
 
   if (btn.textContent.trim() === 'CLAIM') {
@@ -282,38 +334,67 @@ function handleTaskClick(task, btn) {
     btn.style.background = '#cbd5e1';
     updateUI();
     syncTaskClaim(task.id);
-  } else if (!btn.disabled && !btn.textContent.includes('WAIT')) {
-    // Open target link
+  } else if (!btn.disabled && !btn.textContent.includes('CHECKING')) {
     if (tg?.openTelegramLink && task.link.includes('t.me')) {
       tg.openTelegramLink(task.link);
     } else {
       window.open(task.link, '_blank');
     }
 
-    // Start 35-second countdown timer
-    let timeLeft = 35;
-    btn.disabled = true;
-    btn.textContent = `WAIT (${timeLeft}s)`;
-    btn.style.background = '#fde047';
+    // Force Sub Verification if task is channel join
+    if (task.channelUsername) {
+      btn.disabled = true;
+      btn.textContent = 'CHECKING...';
 
-    const timer = setInterval(() => {
-      timeLeft -= 1;
-      if (timeLeft > 0) {
-        btn.textContent = `WAIT (${timeLeft}s)`;
-      } else {
-        clearInterval(timer);
-        btn.disabled = false;
-        btn.textContent = 'CLAIM';
-        btn.style.background = '#2dd4bf';
-      }
-    }, 1000);
+      setTimeout(async () => {
+        try {
+          const res = await fetch(`${state.apiBaseUrl}/api/potato/check-fsub`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ telegramId: state.user.id, channelUsername: task.channelUsername })
+          });
+          const data = await res.json();
+
+          if (data.joined) {
+            btn.disabled = false;
+            btn.textContent = 'CLAIM';
+            btn.style.background = '#2dd4bf';
+          } else {
+            btn.disabled = false;
+            btn.textContent = 'JOIN FIRST';
+            alert('Please join the channel first to claim your reward!');
+          }
+        } catch (e) {
+          btn.disabled = false;
+          btn.textContent = 'CLAIM';
+        }
+      }, 3000);
+
+    } else {
+      // Standard timer for regular tasks
+      let timeLeft = 10;
+      btn.disabled = true;
+      btn.textContent = `WAIT (${timeLeft}s)`;
+
+      const timer = setInterval(() => {
+        timeLeft -= 1;
+        if (timeLeft > 0) {
+          btn.textContent = `WAIT (${timeLeft}s)`;
+        } else {
+          clearInterval(timer);
+          btn.disabled = false;
+          btn.textContent = 'CLAIM';
+          btn.style.background = '#2dd4bf';
+        }
+      }, 1000);
+    }
   }
 }
 
 // --- RENDER FRIENDS REFERRAL LIST ---
 function renderReferrals() {
   if (referralCountEl) {
-    referralCountEl.textContent = state.referrals.length;
+    referralCountEl.textContent = state.referralCount || state.referrals.length || 0;
   }
 
   if (!friendsListEl) return;
@@ -331,7 +412,7 @@ function renderReferrals() {
   `).join('');
 }
 
-// --- FETCH & RENDER WEEKLY LEADERBOARD ---
+// --- FETCH LEADERBOARD ---
 async function loadLeaderboard() {
   if (!leaderboardListEl) return;
 
@@ -343,7 +424,6 @@ async function loadLeaderboard() {
     const top10 = data.top10 || [];
     const userRank = data.userRank || {};
 
-    // Render Top 10 Rankings
     if (top10.length === 0) {
       leaderboardListEl.innerHTML = `<div class="empty-state">No competitors yet this week!</div>`;
     } else {
@@ -371,7 +451,6 @@ async function loadLeaderboard() {
       }).join('');
     }
 
-    // Update Sticky Current User Rank Footer
     const myRankEl = document.getElementById('myRank');
     const myRankNameEl = document.getElementById('myRankName');
     const myRankStatsEl = document.getElementById('myRankStats');
@@ -400,9 +479,20 @@ async function initUser() {
 
     if (res.ok) {
       const data = await res.json();
-      state.balance = data.balance || 0;
+      state.balance = data.balance !== undefined ? data.balance : 0;
+      state.energy = data.energy !== undefined ? data.energy : 1000;
+      state.maxEnergy = data.maxEnergy || 1000;
+      state.tapPower = data.tapPower || 1;
+      state.autoBotIncome = data.autoBotIncome || 0;
+      
+      if (data.upgrades) {
+        state.upgrades = data.upgrades;
+      }
+
       state.completedTasks = Array.from(new Set([...state.completedTasks, ...(data.completedTasks || [])]));
       state.referrals = data.referrals || [];
+      state.referralCount = data.referralCount || state.referrals.length;
+
       localStorage.setItem('completedTasks', JSON.stringify(state.completedTasks));
 
       updateUI();
@@ -413,8 +503,8 @@ async function initUser() {
   }
 }
 
-async function syncData() {
-  if (state.pendingTaps <= 0) return;
+async function syncData(forceSync = false) {
+  if (state.pendingTaps <= 0 && !forceSync) return;
 
   const tapsToSend = state.pendingTaps;
   state.pendingTaps = 0;
@@ -423,7 +513,16 @@ async function syncData() {
     await fetch(`${state.apiBaseUrl}/api/potato/sync`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ telegramId: state.user.id, taps: tapsToSend })
+      body: JSON.stringify({ 
+        telegramId: state.user.id, 
+        taps: tapsToSend,
+        balance: state.balance,
+        energy: state.energy,
+        maxEnergy: state.maxEnergy,
+        upgrades: state.upgrades,
+        tapPower: state.tapPower,
+        autoBotIncome: state.autoBotIncome
+      })
     });
   } catch (err) {
     state.pendingTaps += tapsToSend;
