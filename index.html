@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Potato Tap Game</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="./style.css?v=1.2">
+  <link rel="stylesheet" href="./style.css?v=1.3">
 </head>
 <body>
   <div id="app">
@@ -86,7 +86,42 @@
       </div>
     </section>
 
-    <!-- Tab 3: Tasks Section -->
+    <!-- Tab 3: Leaderboard Section (CENTERED) -->
+    <section id="tab-leaderboard" class="tab-content">
+      <div class="section-banner">
+        <h2>WEEKLY LEADERBOARD 🏆</h2>
+        <p class="subtitle">Top referrers win Telegram Stars & Gifts every Saturday!</p>
+      </div>
+
+      <!-- Weekly Contest Information Banner -->
+      <div class="contest-notice-card">
+        <span class="notice-icon">🎁</span>
+        <div class="notice-text">
+          <strong>Weekly Contest Active</strong>
+          <p>Ranks reset every Saturday. Top 3 referrers claim channel rewards!</p>
+        </div>
+      </div>
+
+      <!-- Top 10 Leaderboard List Container -->
+      <div class="leaderboard-container">
+        <div id="leaderboardList" class="leaderboard-list">
+          <div class="loading-state">Loading Top 10 players...</div>
+        </div>
+      </div>
+
+      <!-- Sticky Current User Position Footer -->
+      <div class="user-rank-card" id="userRankCard">
+        <div class="user-rank-info">
+          <span class="user-rank-num" id="myRank">#--</span>
+          <div class="user-rank-details">
+            <span class="user-rank-name" id="myRankName">You</span>
+            <span class="user-rank-sub" id="myRankStats">0 Referrals • 0 🥔</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 4: Tasks Section -->
     <section id="tab-earn" class="tab-content">
       <div class="section-banner">
         <h2>COMPLETE & EARN 🎯</h2>
@@ -95,19 +130,31 @@
       <div id="tasksList" class="tasks-container"></div>
     </section>
 
-    <!-- Tab 4: Friends Section -->
+    <!-- Tab 5: Friends Section -->
     <section id="tab-friends" class="tab-content">
       <div class="section-banner">
         <h2>INVITE FRIENDS 👥</h2>
         <p class="subtitle">Earn 5,000 Potatoes for every friend invited!</p>
       </div>
+
       <div class="cartoon-card">
         <div class="invite-icon">🎁</div>
         <button class="cartoon-btn btn-green" id="inviteBtn">INVITE A FRIEND</button>
       </div>
+
+      <!-- Referred Friends List Container -->
+      <div class="friends-list-container">
+        <div class="friends-header">
+          <h3>YOUR REFERRALS</h3>
+          <span class="referral-count-badge" id="referral-count">0</span>
+        </div>
+        <div id="friendsList" class="friends-list">
+          <div class="empty-state">No friends invited yet. Share your link!</div>
+        </div>
+      </div>
     </section>
 
-    <!-- Bottom Navigation Bar -->
+    <!-- Bottom Navigation Bar (Centered Trophy Icon) -->
     <nav class="bottom-nav">
       <button class="nav-btn active" data-tab="tab-tap">
         <span class="nav-icon">🥔</span>
@@ -117,6 +164,13 @@
         <span class="nav-icon">⚡</span>
         <label>UPGRADE</label>
       </button>
+
+      <!-- Centered & Larger Trophy Icon -->
+      <button class="nav-btn nav-btn-center" data-tab="tab-leaderboard">
+        <span class="nav-icon-center">🏆</span>
+        <label>RANK</label>
+      </button>
+
       <button class="nav-btn" data-tab="tab-earn">
         <span class="nav-icon">🎯</span>
         <label>EARN</label>
@@ -128,6 +182,6 @@
     </nav>
   </div>
 
-  <script src="app.js?v=1.2"></script>
+  <script src="app.js?v=1.3"></script>
 </body>
 </html>
