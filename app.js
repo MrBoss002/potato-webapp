@@ -70,6 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initUser();
   loadLeaderboard();
   
+  // Initial check for league header visibility
+  toggleLeagueHeader('tab-tap');
+
   // Regenerate 1 energy every second
   setInterval(regenerateEnergy, 1000);
 
@@ -119,6 +122,19 @@ function triggerCaptcha(onSuccess) {
   };
 }
 
+// --- TOGGLE LEAGUE HEADER VISIBILITY ---
+function toggleLeagueHeader(activeTab) {
+  const levelContainer = document.querySelector('.level-progress-container');
+  if (!levelContainer) return;
+
+  // Show only on main tap section, hide on all other tabs
+  if (activeTab === 'tab-tap') {
+    levelContainer.style.display = 'block';
+  } else {
+    levelContainer.style.display = 'none';
+  }
+}
+
 // --- NAVIGATION CONTROLLER ---
 function setupNavigation() {
   const navBtns = document.querySelectorAll('.nav-btn');
@@ -134,6 +150,8 @@ function setupNavigation() {
       btn.classList.add('active');
       const activeContent = document.getElementById(targetTab);
       if (activeContent) activeContent.classList.add('active');
+
+      toggleLeagueHeader(targetTab);
 
       if (targetTab === 'tab-leaderboard') {
         loadLeaderboard();
@@ -444,7 +462,9 @@ async function loadLeaderboard() {
 
     const data = await res.json();
     const top10 = data.top10 || [];
-    const userRank = data.userRank || {};
+    
+    // Ensure top 10 is strictly sorted by balance
+    top10.sort((a, b) => (b.balance || 0) - (a.balance || 0));
 
     if (top10.length === 0) {
       leaderboardListEl.innerHTML = `<div class="empty-state">No competitors yet this week!</div>`;
@@ -458,11 +478,13 @@ async function loadLeaderboard() {
         if (rankNum === 2) rankBadge = '🥈';
         if (rankNum === 3) rankBadge = '🥉';
 
+        const playerTier = getTierInfo(player.balance || 0);
+
         return `
           <div class="leader-card ${rankClass}">
             <div class="leader-info">
               <span class="leader-rank">${rankBadge}</span>
-              <span class="leader-name">${player.first_name || player.username || 'Tapper'}</span>
+              <span class="leader-name">${player.first_name || player.username || 'Tapper'} <small style="opacity:0.75; font-size: 11px;">(${playerTier.name})</small></span>
             </div>
             <div class="leader-stats">
               <span class="leader-refs">👥 ${player.weeklyReferrals || 0} Ref</span>
@@ -473,14 +495,22 @@ async function loadLeaderboard() {
       }).join('');
     }
 
+    // Determine correct user rank dynamically
+    let calculatedRank = top10.findIndex(p => String(p.telegramId) === String(state.user.id)) + 1;
+    if (calculatedRank === 0 && data.userRank?.rank) {
+      calculatedRank = data.userRank.rank;
+    }
+
     const myRankEl = document.getElementById('myRank');
     const myRankNameEl = document.getElementById('myRankName');
     const myRankStatsEl = document.getElementById('myRankStats');
 
-    if (myRankEl) myRankEl.textContent = userRank.rank ? `#${userRank.rank}` : '#--';
-    if (myRankNameEl) myRankNameEl.textContent = `${state.user.first_name} (You)`;
+    const myTier = getTierInfo(state.balance);
+
+    if (myRankEl) myRankEl.textContent = calculatedRank > 0 ? `#${calculatedRank}` : '#--';
+    if (myRankNameEl) myRankNameEl.innerHTML = `${state.user.first_name} <small style="opacity:0.8;">(${myTier.name})</small>`;
     if (myRankStatsEl) {
-      myRankStatsEl.textContent = `${userRank.weeklyReferrals || 0} Referrals • ${(state.balance || 0).toLocaleString()} 🥔`;
+      myRankStatsEl.textContent = `${state.referralCount || 0} Referrals • ${(state.balance || 0).toLocaleString()} 🥔`;
     }
   } catch (err) {
     console.warn('Leaderboard connection error:', err);
