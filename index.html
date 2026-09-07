@@ -25,16 +25,22 @@
       </div>
     </header>
 
+    <!-- Level / Tier Progress Bar (Placed below Profile/Header) -->
+    <div class="level-progress-container">
+      <div class="level-info-row">
+        <span id="tier-name" class="tier-title">Bronze</span>
+        <span id="level-num" class="level-subtitle">Level 1/5</span>
+      </div>
+      <div class="level-progress-bar">
+        <div id="levelProgressFill" class="level-progress-fill"></div>
+      </div>
+    </div>
+
     <!-- Tab 1: Tap Game Stage -->
     <main id="tab-tap" class="tab-content active">
       <div class="game-stage">
-        <!-- Floating Badges Container around Potato -->
+        <!-- Potato Container (Clean design, medal slots removed) -->
         <div class="potato-container">
-          <div class="badge-slot badge-top-left" id="badge-bronze" title="Bronze Tapper"></div>
-          <div class="badge-slot badge-top-right" id="badge-silver" title="Silver Tapper"></div>
-          <div class="badge-slot badge-bottom-left" id="badge-gold" title="Gold Tapper"></div>
-          <div class="badge-slot badge-bottom-right" id="badge-diamond" title="Diamond Tapper"></div>
-
           <!-- Central Tap Button -->
           <div class="tap-area" id="tapButton">
             <span class="potato-hero">🥔</span>
@@ -89,16 +95,16 @@
     <!-- Tab 3: Leaderboard Section (CENTERED) -->
     <section id="tab-leaderboard" class="tab-content">
       <div class="section-banner">
-        <h2>WEEKLY LEADERBOARD 🏆</h2>
-        <p class="subtitle">Top referrers win Telegram Stars & Gifts every Saturday!</p>
+        <h2>LEADERBOARD 🏆</h2>
+        <p class="subtitle">Top players win Telegram Stars & Channel Gifts!</p>
       </div>
 
-      <!-- Weekly Contest Information Banner -->
+      <!-- Permanent Leaderboard Information Banner -->
       <div class="contest-notice-card">
         <span class="notice-icon">🎁</span>
         <div class="notice-text">
-          <strong>Weekly Contest Active</strong>
-          <p>Ranks reset every Saturday. Top 3 referrers claim channel rewards!</p>
+          <strong>Permanent Leaderboard Active</strong>
+          <p>Climb the ranks! Top players receive gifts and rewards from the channel.</p>
         </div>
       </div>
 
