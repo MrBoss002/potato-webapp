@@ -10,8 +10,8 @@ const state = {
   user: tg?.initDataUnsafe?.user || { id: 12345678, first_name: "Player", username: "Guest" },
   refBy: tg?.initDataUnsafe?.start_param || null,
   balance: 0,
-  energy: 1000,
-  maxEnergy: 1000,
+  energy: 50,
+  maxEnergy: 50,
   tapPower: 1,
   autoBotIncome: 0,
   totalTapsCount: 0,
@@ -46,6 +46,11 @@ const inviteBtn = document.getElementById('inviteBtn');
 const friendsListEl = document.getElementById('friendsList');
 const referralCountEl = document.getElementById('referral-count');
 const leaderboardListEl = document.getElementById('leaderboardList');
+
+// Level & Tier Progress DOM Elements
+const tierTitleEl = document.getElementById('tierTitle');
+const levelSubtitleEl = document.getElementById('levelSubtitle');
+const levelProgressFillEl = document.getElementById('levelProgressFill');
 
 // Upgrade Buttons
 const btnAutobot = document.getElementById('btn-autobot');
@@ -159,31 +164,10 @@ function setupTapMechanics() {
     state.pendingTaps += state.tapPower;
 
     updateUI();
-    checkBadgeUnlocks();
     showFloatingScore(e.clientX, e.clientY, `+${state.tapPower}`);
 
     if (tg?.HapticFeedback) {
       tg.HapticFeedback.impactOccurred('light');
-    }
-  });
-}
-
-function checkBadgeUnlocks() {
-  const badges = [
-    { id: 'bronze', count: 15, emoji: '🥉', elementId: 'badge-bronze' },
-    { id: 'silver', count: 100, emoji: '🥈', elementId: 'badge-silver' },
-    { id: 'gold', count: 500, emoji: '🥇', elementId: 'badge-gold' },
-    { id: 'diamond', count: 1500, emoji: '💎', elementId: 'badge-diamond' }
-  ];
-
-  badges.forEach(badge => {
-    if (state.totalTapsCount >= badge.count && !state.unlockedBadges.includes(badge.id)) {
-      state.unlockedBadges.push(badge.id);
-      const slot = document.getElementById(badge.elementId);
-      if (slot) {
-        slot.textContent = badge.emoji;
-        slot.classList.add('unlocked');
-      }
     }
   });
 }
@@ -214,6 +198,42 @@ function showFloatingScore(x, y, text) {
   setTimeout(() => scoreEl.remove(), 800);
 }
 
+// --- TIER / LEVEL SYSTEM ---
+function getTierInfo(balance) {
+  const tiers = [
+    { name: "Bronze", min: 0, max: 10000, level: 1 },
+    { name: "Silver", min: 10000, max: 100000, level: 2 },
+    { name: "Gold", min: 100000, max: 1000000, level: 3 },
+    { name: "Platinum", min: 1000000, max: 10000000, level: 4 },
+    { name: "Diamond", min: 10000000, max: Infinity, level: 5 }
+  ];
+
+  for (let i = 0; i < tiers.length; i++) {
+    if (balance < tiers[i].max) {
+      return tiers[i];
+    }
+  }
+  return tiers[tiers.length - 1];
+}
+
+function updateLevelProgress() {
+  const tier = getTierInfo(state.balance);
+
+  if (tierTitleEl) tierTitleEl.textContent = tier.name;
+  if (levelSubtitleEl) levelSubtitleEl.textContent = `Level ${tier.level}/5`;
+
+  if (levelProgressFillEl) {
+    if (tier.max === Infinity) {
+      levelProgressFillEl.style.width = '100%';
+    } else {
+      const currentLevelProgress = state.balance - tier.min;
+      const currentLevelGoal = tier.max - tier.min;
+      const progressPercent = Math.min(100, Math.max(0, (currentLevelProgress / currentLevelGoal) * 100));
+      levelProgressFillEl.style.width = `${progressPercent}%`;
+    }
+  }
+}
+
 function updateUI() {
   if (balanceEl) balanceEl.textContent = state.balance.toLocaleString();
   if (energyEl) energyEl.textContent = state.energy;
@@ -222,6 +242,8 @@ function updateUI() {
     const percentage = (state.energy / state.maxEnergy) * 100;
     energyFillEl.style.width = `${percentage}%`;
   }
+
+  updateLevelProgress();
 
   const badgeAutobot = document.getElementById('badge-autobot');
   const badgeMultitap = document.getElementById('badge-multitap');
@@ -480,8 +502,8 @@ async function initUser() {
     if (res.ok) {
       const data = await res.json();
       state.balance = data.balance !== undefined ? data.balance : 0;
-      state.energy = data.energy !== undefined ? data.energy : 1000;
-      state.maxEnergy = data.maxEnergy || 1000;
+      state.energy = data.energy !== undefined ? data.energy : 50;
+      state.maxEnergy = data.maxEnergy || 50;
       state.tapPower = data.tapPower || 1;
       state.autoBotIncome = data.autoBotIncome || 0;
       
