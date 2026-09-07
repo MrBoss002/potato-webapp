@@ -37,7 +37,7 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 6px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   z-index: 10;
 }
 
@@ -58,6 +58,54 @@ body {
 .resource-badge { background: #fef08a; }
 .energy-badge { background: #bae6fd; }
 .res-icon { font-size: 16px; }
+
+/* --- LEVEL / TIER PROGRESS BAR --- */
+.level-progress-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+  z-index: 10;
+}
+
+.level-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 4px;
+  font-size: 12px;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 1.5px 1.5px 0px #0f172a;
+}
+
+.tier-title {
+  color: #fef08a;
+  text-transform: uppercase;
+}
+
+.level-subtitle {
+  color: #ffffff;
+}
+
+.level-progress-bar {
+  width: 100%;
+  height: 16px;
+  background: #ffffff;
+  border: 3px solid #0f172a;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 0px #0f172a;
+}
+
+.level-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: #38bdf8;
+  border-radius: 6px;
+  transition: width 0.2s ease;
+}
 
 /* --- TAB CONTENT CONTROLLER --- */
 .tab-content {
@@ -117,40 +165,6 @@ body {
 .potato-hero {
   font-size: 100px;
   filter: drop-shadow(0px 8px 0px rgba(0,0,0,0.3));
-}
-
-.badge-slot {
-  position: absolute;
-  width: 44px;
-  height: 44px;
-  background: rgba(255, 255, 255, 0.9);
-  border: 3px solid #0f172a;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 22px;
-  box-shadow: 0px 4px 0px #0f172a;
-  z-index: 3;
-  opacity: 0.3;
-  filter: grayscale(100%);
-  transition: all 0.3s ease;
-}
-
-.badge-slot.unlocked {
-  opacity: 1;
-  filter: grayscale(0%);
-  animation: badgePop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.badge-top-left     { top: 5px; left: 5px; }
-.badge-top-right    { top: 5px; right: 5px; }
-.badge-bottom-left  { bottom: 5px; left: 5px; }
-.badge-bottom-right { bottom: 5px; right: 5px; }
-
-@keyframes badgePop {
-  0% { transform: scale(0); }
-  100% { transform: scale(1); }
 }
 
 .energy-bar-wrapper {
@@ -249,6 +263,11 @@ body {
     19% 28%, 17% 7%, 37% 15%
   );
   animation: badgePop 0.3s ease-out;
+}
+
+@keyframes badgePop {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
 }
 
 .upgrade-icon { font-size: 32px; }
