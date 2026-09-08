@@ -20,12 +20,13 @@ const state = {
   completedTasks: JSON.parse(localStorage.getItem('completedTasks') || '[]'),
   referrals: [],
   referralCount: 0,
+  lastSyncTime: Date.now(),
   apiBaseUrl: "https://core-api-server-qkny.onrender.com",
 
   // Upgrades
   upgrades: {
     autobot: { level: 0, cost: 1000 },
-    multitap: { level: 1, cost: 500 },
+    multitap: { level: 0, cost: 500 },
     maxenergy: { level: 0, cost: 250 }
   }
 };
@@ -33,6 +34,16 @@ const state = {
 // Anti-Bot Captcha Variables
 let tapSessionCount = 0;
 let isCaptchaActive = false;
+
+// Dynamic Vector Icons Collection
+const SVG_ICONS = {
+  potato: `<svg width="16" height="16" viewBox="0 0 24 24" fill="#FFA751" class="icon-svg"><circle cx="12" cy="12" r="10"/></svg>`,
+  telegram: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0088cc" stroke-width="2" class="icon-svg"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`,
+  twitter: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1DA1F2" stroke-width="2" class="icon-svg"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>`,
+  taskDefault: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" class="icon-svg"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>`,
+  userAvatar: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-svg"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+  trophy: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" class="icon-svg"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>`
+};
 
 // DOM Elements
 const balanceEl = document.getElementById('balance');
@@ -48,9 +59,10 @@ const referralCountEl = document.getElementById('referral-count');
 const leaderboardListEl = document.getElementById('leaderboardList');
 
 // Level & Tier Progress DOM Elements
-const tierTitleEl = document.getElementById('tierTitle');
-const levelSubtitleEl = document.getElementById('levelSubtitle');
+const tierTitleEl = document.getElementById('tier-name');
+const levelSubtitleEl = document.getElementById('level-num');
 const levelProgressFillEl = document.getElementById('levelProgressFill');
+const potatoBodyEl = document.getElementById('potatoBody');
 
 // Upgrade Buttons
 const btnAutobot = document.getElementById('btn-autobot');
@@ -73,8 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial check for league header visibility
   toggleLeagueHeader('tab-tap');
 
-  // Regenerate 1 energy every second
-  setInterval(regenerateEnergy, 1000);
+  // Regenerate 1 energy every 5 seconds (12 energy per minute)
+  setInterval(regenerateEnergy, 5000);
 
   // Passive Auto Bot Income
   setInterval(processAutoBotIncome, 5000);
@@ -127,7 +139,6 @@ function toggleLeagueHeader(activeTab) {
   const levelContainer = document.querySelector('.level-progress-container');
   if (!levelContainer) return;
 
-  // Show only on main tap section, hide on all other tabs
   if (activeTab === 'tab-tap') {
     levelContainer.style.display = 'block';
   } else {
@@ -216,14 +227,14 @@ function showFloatingScore(x, y, text) {
   setTimeout(() => scoreEl.remove(), 800);
 }
 
-// --- TIER / LEVEL SYSTEM ---
+// --- TIER / LEVEL SYSTEM & SVG POTATO FILTER ---
 function getTierInfo(balance) {
   const tiers = [
-    { name: "Bronze", min: 0, max: 10000, level: 1 },
-    { name: "Silver", min: 10000, max: 100000, level: 2 },
-    { name: "Gold", min: 100000, max: 1000000, level: 3 },
-    { name: "Platinum", min: 1000000, max: 10000000, level: 4 },
-    { name: "Diamond", min: 10000000, max: Infinity, level: 5 }
+    { name: "Bronze", min: 0, max: 10000, level: 1, gradientId: "url(#potato-bronze)" },
+    { name: "Silver", min: 10000, max: 100000, level: 2, gradientId: "url(#potato-silver)" },
+    { name: "Gold", min: 100000, max: 1000000, level: 3, gradientId: "url(#potato-gold)" },
+    { name: "Platinum", min: 1000000, max: 10000000, level: 4, gradientId: "url(#potato-platinum)" },
+    { name: "Diamond", min: 10000000, max: Infinity, level: 5, gradientId: "url(#potato-diamond)" }
   ];
 
   for (let i = 0; i < tiers.length; i++) {
@@ -239,6 +250,11 @@ function updateLevelProgress() {
 
   if (tierTitleEl) tierTitleEl.textContent = tier.name;
   if (levelSubtitleEl) levelSubtitleEl.textContent = `Level ${tier.level}/5`;
+
+  // Update Vector Potato Gradient fill
+  if (potatoBodyEl) {
+    potatoBodyEl.setAttribute('fill', tier.gradientId);
+  }
 
   if (levelProgressFillEl) {
     if (tier.max === Infinity) {
@@ -271,9 +287,9 @@ function updateUI() {
   if (badgeMultitap) badgeMultitap.textContent = `Lvl ${state.upgrades.multitap.level}`;
   if (badgeMaxenergy) badgeMaxenergy.textContent = `Lvl ${state.upgrades.maxenergy.level}`;
 
-  if (btnAutobot) btnAutobot.textContent = `🥔 ${state.upgrades.autobot.cost.toLocaleString()}`;
-  if (btnMultitap) btnMultitap.textContent = `🥔 ${state.upgrades.multitap.cost.toLocaleString()}`;
-  if (btnMaxenergy) btnMaxenergy.textContent = `🥔 ${state.upgrades.maxenergy.cost.toLocaleString()}`;
+  if (btnAutobot) btnAutobot.innerHTML = `${SVG_ICONS.potato} ${state.upgrades.autobot.cost.toLocaleString()}`;
+  if (btnMultitap) btnMultitap.innerHTML = `${SVG_ICONS.potato} ${state.upgrades.multitap.cost.toLocaleString()}`;
+  if (btnMaxenergy) btnMaxenergy.innerHTML = `${SVG_ICONS.potato} ${state.upgrades.maxenergy.cost.toLocaleString()}`;
 }
 
 // --- UPGRADE SYSTEM LOGIC ---
@@ -312,8 +328,8 @@ function setupUpgrades() {
       if (state.balance >= up.cost) {
         state.balance -= up.cost;
         up.level += 1;
-        state.maxEnergy += 500;
-        state.energy += 500;
+        state.maxEnergy += 15;
+        state.energy += 15;
         up.cost *= 2;
         updateUI();
         syncData(true);
@@ -335,10 +351,15 @@ async function loadTasks() {
     tasks.forEach(task => {
       const isCompleted = state.completedTasks.includes(task.id);
       
+      // Dynamic SVG task icon selection
+      let taskIconSvg = SVG_ICONS.taskDefault;
+      if (task.type === 'telegram') taskIconSvg = SVG_ICONS.telegram;
+      if (task.type === 'twitter') taskIconSvg = SVG_ICONS.twitter;
+
       const card = document.createElement('div');
       card.className = 'task-card';
       card.innerHTML = `
-        <div class="task-icon">${task.icon || '🎯'}</div>
+        <div class="task-icon">${taskIconSvg}</div>
         <div class="task-info">
           <div class="task-title">${task.title}</div>
           <div class="task-desc">${task.description}</div>
@@ -381,7 +402,6 @@ async function handleTaskClick(task, btn) {
       window.open(task.link, '_blank');
     }
 
-    // Force Sub Verification if task is channel join
     if (task.channelUsername) {
       btn.disabled = true;
       btn.textContent = 'CHECKING...';
@@ -411,7 +431,6 @@ async function handleTaskClick(task, btn) {
       }, 3000);
 
     } else {
-      // Standard timer for regular tasks
       let timeLeft = 10;
       btn.disabled = true;
       btn.textContent = `WAIT (${timeLeft}s)`;
@@ -446,8 +465,8 @@ function renderReferrals() {
 
   friendsListEl.innerHTML = state.referrals.map(friend => `
     <div class="friend-item">
-      <div class="friend-name">👤 ${friend.first_name || friend.username || 'User'}</div>
-      <div class="friend-reward">+5,000 🥔</div>
+      <div class="friend-name">${SVG_ICONS.userAvatar} ${friend.first_name || friend.username || 'User'}</div>
+      <div class="friend-reward">+2,500 🥔</div>
     </div>
   `).join('');
 }
@@ -463,7 +482,6 @@ async function loadLeaderboard() {
     const data = await res.json();
     const top10 = data.top10 || [];
     
-    // Ensure top 10 is strictly sorted by balance
     top10.sort((a, b) => (b.balance || 0) - (a.balance || 0));
 
     if (top10.length === 0) {
@@ -495,7 +513,6 @@ async function loadLeaderboard() {
       }).join('');
     }
 
-    // Determine correct user rank dynamically
     let calculatedRank = top10.findIndex(p => String(p.telegramId) === String(state.user.id)) + 1;
     if (calculatedRank === 0 && data.userRank?.rank) {
       calculatedRank = data.userRank.rank;
@@ -539,6 +556,15 @@ async function initUser() {
       
       if (data.upgrades) {
         state.upgrades = data.upgrades;
+      }
+
+      // Offline Energy Calculation (1 energy per 5 seconds offline)
+      if (data.lastSyncTime) {
+        const offlineSeconds = Math.floor((Date.now() - new Date(data.lastSyncTime).getTime()) / 1000);
+        const recoveredEnergy = Math.floor(offlineSeconds / 5);
+        if (recoveredEnergy > 0) {
+          state.energy = Math.min(state.maxEnergy, state.energy + recoveredEnergy);
+        }
       }
 
       state.completedTasks = Array.from(new Set([...state.completedTasks, ...(data.completedTasks || [])]));
