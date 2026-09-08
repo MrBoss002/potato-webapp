@@ -31,6 +31,13 @@ body {
   min-height: 100vh;
 }
 
+/* --- VECTOR ICON & SVG UTILITIES --- */
+.icon-svg {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
 /* --- TOP DASHBOARD / HEADER --- */
 .top-bar {
   display: flex;
@@ -54,10 +61,10 @@ body {
   font-weight: 900;
 }
 
-.user-avatar { font-size: 16px; }
+.user-avatar { font-size: 16px; display: flex; align-items: center; }
 .resource-badge { background: #fef08a; }
 .energy-badge { background: #bae6fd; }
-.res-icon { font-size: 16px; }
+.res-icon { font-size: 16px; display: flex; align-items: center; }
 
 /* --- LEVEL / TIER PROGRESS BAR --- */
 .level-progress-container {
@@ -143,8 +150,8 @@ body {
 }
 
 .tap-area {
-  width: 200px;
-  height: 200px;
+  width: 220px;
+  height: 220px;
   background: #fbbf24;
   border: 5px solid #0f172a;
   border-radius: 50%;
@@ -162,9 +169,11 @@ body {
   box-shadow: 0px 6px 0px #0f172a, inset 0px 8px 0px #fef08a;
 }
 
-.potato-hero {
-  font-size: 100px;
+.potato-svg-hero {
+  width: 140px;
+  height: 140px;
   filter: drop-shadow(0px 8px 0px rgba(0,0,0,0.3));
+  transition: transform 0.05s ease;
 }
 
 .energy-bar-wrapper {
@@ -270,7 +279,12 @@ body {
   100% { transform: scale(1); }
 }
 
-.upgrade-icon { font-size: 32px; }
+.upgrade-icon { 
+  font-size: 32px; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+}
 
 .upgrade-title {
   font-size: 11px;
@@ -295,6 +309,10 @@ body {
   box-shadow: 0px 3px 0px #0f172a;
   cursor: pointer;
   margin-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
 .upgrade-btn:active {
@@ -316,7 +334,7 @@ body {
   margin-bottom: 14px;
 }
 
-.notice-icon { font-size: 26px; }
+.notice-icon { font-size: 26px; display: flex; align-items: center; }
 
 .notice-text strong {
   display: block;
@@ -465,7 +483,12 @@ body {
   box-shadow: 0px 5px 0px #0f172a;
 }
 
-.task-icon { font-size: 28px; }
+.task-icon { 
+  font-size: 28px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+}
 
 .task-info {
   display: flex;
@@ -515,7 +538,12 @@ body {
   margin-bottom: 16px;
 }
 
-.invite-icon { font-size: 50px; margin-bottom: 12px; }
+.invite-icon { 
+  font-size: 50px; 
+  margin-bottom: 12px; 
+  display: flex; 
+  justify-content: center;
+}
 
 .cartoon-btn {
   width: 100%;
@@ -588,6 +616,9 @@ body {
   font-size: 13px;
   font-weight: 900;
   color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .friend-reward {
@@ -633,7 +664,7 @@ body {
   flex: 1;
 }
 
-.nav-icon { font-size: 22px; }
+.nav-icon { font-size: 22px; display: flex; align-items: center; }
 .nav-btn label { font-size: 10px; font-weight: 900; cursor: pointer; }
 .nav-btn.active { color: #1d4ed8; }
 
