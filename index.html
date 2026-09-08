@@ -5,73 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Potato Tap Game</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="./style.css?v=1.4">
+  <link rel="stylesheet" href="./style.css?v=1.3">
 </head>
 <body>
   <div id="app">
-    <!-- Dynamic SVG Gradients for Dynamic Level Potato Badges -->
-    <svg style="display: none;">
-      <defs>
-        <!-- Bronze Tier (Level 1) -->
-        <radialGradient id="potato-bronze" cx="40%" cy="40%" r="60%">
-          <stop offset="0%" stop-color="#E5A05C"/>
-          <stop offset="50%" stop-color="#B86D29"/>
-          <stop offset="100%" stop-color="#6E3B0F"/>
-        </radialGradient>
-
-        <!-- Silver Tier (Level 2) -->
-        <radialGradient id="potato-silver" cx="40%" cy="40%" r="60%">
-          <stop offset="0%" stop-color="#FFFFFF"/>
-          <stop offset="40%" stop-color="#D1D5DB"/>
-          <stop offset="100%" stop-color="#4B5563"/>
-        </radialGradient>
-
-        <!-- Gold Tier (Level 3) -->
-        <radialGradient id="potato-gold" cx="40%" cy="40%" r="60%">
-          <stop offset="0%" stop-color="#FFE259"/>
-          <stop offset="60%" stop-color="#FFA751"/>
-          <stop offset="100%" stop-color="#9A5200"/>
-        </radialGradient>
-
-        <!-- Platinum Tier (Level 4) -->
-        <radialGradient id="potato-platinum" cx="40%" cy="40%" r="60%">
-          <stop offset="0%" stop-color="#E0F7FA"/>
-          <stop offset="50%" stop-color="#26C6DA"/>
-          <stop offset="100%" stop-color="#006064"/>
-        </radialGradient>
-
-        <!-- Diamond Tier (Level 5) -->
-        <radialGradient id="potato-diamond" cx="40%" cy="40%" r="60%">
-          <stop offset="0%" stop-color="#F3E5F5"/>
-          <stop offset="40%" stop-color="#AB47BC"/>
-          <stop offset="100%" stop-color="#4A148C"/>
-        </radialGradient>
-      </defs>
-    </svg>
-
-    <!-- Top Stats Header Bar -->
+    <!-- Top Stats Bar -->
     <header class="top-bar">
       <div class="user-pill">
-        <span class="user-avatar">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-svg"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        </span>
+        <span class="user-avatar">🥔</span>
         <span id="username">Player</span>
       </div>
       <div class="resource-badge">
-        <span class="res-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#FFA751" class="icon-svg"><circle cx="12" cy="12" r="10"/></svg>
-        </span>
+        <span class="res-icon">🥔</span>
         <span id="balance">0</span>
       </div>
       <div class="resource-badge energy-badge">
-        <span class="res-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#FFD700" class="icon-svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        </span>
+        <span class="res-icon">⚡</span>
         <span id="energy">50</span>/<span id="maxEnergy">50</span>
       </div>
     </header>
 
-    <!-- Level Progress Bar -->
+    <!-- Level / Tier Progress Bar -->
     <div class="level-progress-container">
       <div class="level-info-row">
         <span id="tier-name" class="tier-title">Bronze</span>
@@ -82,23 +36,17 @@
       </div>
     </div>
 
-    <!-- TAB 1: TAP STAGE -->
+    <!-- Tab 1: Tap Game Stage -->
     <main id="tab-tap" class="tab-content active">
       <div class="game-stage">
         <div class="potato-container">
-          <!-- Central Dynamic SVG Potato Tapper -->
           <div class="tap-area" id="tapButton">
-            <svg id="dynamicPotatoSvg" viewBox="0 0 200 200" width="180" height="180" class="potato-hero-svg">
-              <ellipse id="potatoBody" cx="100" cy="100" rx="80" ry="65" fill="url(#potato-bronze)" transform="rotate(-10 100 100)" />
-              <circle cx="70" cy="80" r="4" fill="rgba(0,0,0,0.15)" />
-              <circle cx="130" cy="110" r="5" fill="rgba(0,0,0,0.15)" />
-              <circle cx="110" cy="70" r="3" fill="rgba(0,0,0,0.15)" />
-            </svg>
+            <span class="potato-hero">🥔</span>
           </div>
         </div>
       </div>
 
-      <!-- Energy Bar -->
+      <!-- Visible Energy Recharge Bar -->
       <div class="energy-bar-wrapper">
         <div class="energy-bar">
           <div class="energy-fill" id="energyFill"></div>
@@ -106,30 +54,26 @@
       </div>
     </main>
 
-    <!-- TAB 2: UPGRADES / BOOSTERS -->
+    <!-- Tab 2: Upgrades Section -->
     <section id="tab-upgrade" class="tab-content">
       <div class="section-banner">
-        <h2>BOOSTERS & GEAR</h2>
+        <h2>BOOSTERS & GEAR 🚀</h2>
         <p class="subtitle">Upgrade your tapping power and passive income!</p>
       </div>
       <div class="upgrades-grid">
         <!-- Upgrade 1: Auto Bot -->
         <div class="upgrade-card">
           <div class="lvl-badge" id="badge-autobot">Lvl 0</div>
-          <div class="upgrade-icon">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FF9D00" stroke-width="2" class="icon-svg"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
-          </div>
+          <div class="upgrade-icon">🤖</div>
           <div class="upgrade-title">AUTO BOT</div>
           <div class="upgrade-benefit">+100/hr 🥔</div>
           <button class="upgrade-btn" id="btn-autobot">🥔 1,000</button>
         </div>
 
-        <!-- Upgrade 2: Multi-Tap -->
+        <!-- Upgrade 2: Multi-Tap (Fixed to Lvl 0) -->
         <div class="upgrade-card">
           <div class="lvl-badge" id="badge-multitap">Lvl 0</div>
-          <div class="upgrade-icon">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" stroke-width="2" class="icon-svg"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v6"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 0 1 2 2v4a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
-          </div>
+          <div class="upgrade-icon">🚀</div>
           <div class="upgrade-title">MULTI-TAP</div>
           <div class="upgrade-benefit">+2 per tap</div>
           <button class="upgrade-btn" id="btn-multitap">🥔 500</button>
@@ -138,9 +82,7 @@
         <!-- Upgrade 3: Max Energy -->
         <div class="upgrade-card">
           <div class="lvl-badge" id="badge-maxenergy">Lvl 0</div>
-          <div class="upgrade-icon">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#00FF66" stroke-width="2" class="icon-svg"><rect x="2" y="7" width="16" height="10" rx="2"/><line x1="22" y1="11" x2="22" y2="13"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/></svg>
-          </div>
+          <div class="upgrade-icon">🔋</div>
           <div class="upgrade-title">MAX ENERGY</div>
           <div class="upgrade-benefit">+15 Max Taps</div>
           <button class="upgrade-btn" id="btn-maxenergy">🥔 250</button>
@@ -148,35 +90,27 @@
       </div>
     </section>
 
-    <!-- TAB 3: LEADERBOARD -->
+    <!-- Tab 3: Leaderboard Section -->
     <section id="tab-leaderboard" class="tab-content">
       <div class="section-banner">
-        <h2>LEADERBOARD</h2>
+        <h2>LEADERBOARD 🏆</h2>
         <p class="subtitle">Top players win Telegram Stars & Channel Gifts!</p>
       </div>
 
-      <!-- Compact Side-by-Side Announcement Banner -->
       <div class="contest-notice-card">
-        <div class="notice-left">
-          <div class="notice-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" class="icon-svg"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
-          </div>
-          <div class="notice-text">
-            <strong>Leaderboard Rewards Active</strong>
-            <p>Climb ranks for weekly gifts!</p>
-          </div>
+        <span class="notice-icon">🎁</span>
+        <div class="notice-text">
+          <strong>Permanent Leaderboard Active</strong>
+          <p>Climb the ranks! Top players receive gifts and rewards from the channel.</p>
         </div>
-        <a href="https://t.me/PotatoTapNews" target="_blank" class="promo-btn">JOIN</a>
       </div>
 
-      <!-- Top 10 Leaderboard List -->
       <div class="leaderboard-container">
         <div id="leaderboardList" class="leaderboard-list">
           <div class="loading-state">Loading Top 10 players...</div>
         </div>
       </div>
 
-      <!-- User Rank Card -->
       <div class="user-rank-card" id="userRankCard">
         <div class="user-rank-info">
           <span class="user-rank-num" id="myRank">#--</span>
@@ -188,26 +122,24 @@
       </div>
     </section>
 
-    <!-- TAB 4: EARN / TASKS -->
+    <!-- Tab 4: Tasks Section -->
     <section id="tab-earn" class="tab-content">
       <div class="section-banner">
-        <h2>COMPLETE & EARN</h2>
+        <h2>COMPLETE & EARN 🎯</h2>
         <p class="subtitle">Finish tasks to claim instant potato bonuses!</p>
       </div>
       <div id="tasksList" class="tasks-container"></div>
     </section>
 
-    <!-- TAB 5: FRIENDS / REFERRALS -->
+    <!-- Tab 5: Friends Section -->
     <section id="tab-friends" class="tab-content">
       <div class="section-banner">
-        <h2>INVITE FRIENDS</h2>
-        <p class="subtitle">Earn 2,500 Potatoes for every friend invited!</p>
+        <h2>INVITE FRIENDS 👥</h2>
+        <p class="subtitle">Earn 5,000 Potatoes for every friend invited!</p>
       </div>
 
       <div class="cartoon-card">
-        <div class="invite-icon">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" class="icon-svg"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-        </div>
+        <div class="invite-icon">🎁</div>
         <button class="cartoon-btn btn-green" id="inviteBtn">INVITE A FRIEND</button>
       </div>
 
@@ -222,45 +154,33 @@
       </div>
     </section>
 
-    <!-- Bottom Navigation Bar -->
+    <!-- Bottom Navigation Bar (Emojis Restored) -->
     <nav class="bottom-nav">
       <button class="nav-btn active" data-tab="tab-tap">
-        <span class="nav-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="#FFA751" class="icon-svg"><circle cx="12" cy="12" r="10"/></svg>
-        </span>
+        <span class="nav-icon">🥔</span>
         <label>TAP</label>
       </button>
-
       <button class="nav-btn" data-tab="tab-upgrade">
-        <span class="nav-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        </span>
+        <span class="nav-icon">⚡</span>
         <label>UPGRADE</label>
       </button>
 
       <button class="nav-btn nav-btn-center" data-tab="tab-leaderboard">
-        <span class="nav-icon-center">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" class="icon-svg"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
-        </span>
+        <span class="nav-icon-center">🏆</span>
         <label>RANK</label>
       </button>
 
       <button class="nav-btn" data-tab="tab-earn">
-        <span class="nav-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-svg"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-        </span>
+        <span class="nav-icon">🎯</span>
         <label>EARN</label>
       </button>
-
       <button class="nav-btn" data-tab="tab-friends">
-        <span class="nav-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-svg"><path d="M17 21v-2a4 4 0 0 0-3-3.87"/><path d="M9 21v-2a4 4 0 0 0-4-4.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><circle cx="9" cy="7" r="4"/></svg>
-        </span>
+        <span class="nav-icon">👥</span>
         <label>FRIENDS</label>
       </button>
     </nav>
   </div>
 
-  <script src="app.js?v=1.4"></script>
+  <script src="app.js?v=1.3"></script>
 </body>
 </html>
